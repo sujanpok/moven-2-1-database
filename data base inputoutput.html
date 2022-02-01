@@ -1,0 +1,83 @@
+add.html
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>ユーザー新規登録</title>
+
+<meta charset="utf-8" />
+</head>
+<body>
+    <h1>ユーザー新規登録</h1>
+    <form th:action="@{/list}" th:object="${userRequest}"
+        method="post">
+        <table>
+             <tr>
+                <th class="cell_title">ID</th>
+                <th class="cell_required">※</th>
+                <td><input type="text" th:field="*{id}"></td>
+            </tr>
+            <tr>
+                <th class="cell_title">名前</th>
+                <th class="cell_required">※</th>
+                <td><input type="text" th:field="*{name}"></td>
+            </tr>
+            <tr>
+                <th class="cell_title">住所</th>
+                <th class="cell_required"></th>
+                <td><input type="text" th:field="*{address}"></td>
+            </tr>
+            <tr>
+                <th class="cell_title">電話番号</th>
+                <th class="cell_required"></th>
+                <td><input type="text" th:field="*{phone}"></td>
+            </tr>
+        </table>
+        <div class="btn_area_center">
+            <input type="submit" value="登録" class="btn">
+        </div>
+    </form>
+</body>
+</html>
+
+
+
+list.html
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>ユーザー情報一覧</title>
+<link href="/css/list.css" rel="stylesheet"></link>
+<meta charset="utf-8" />
+</head>
+<body>
+    <h1>ユーザー情報一覧</h1>
+    <div>
+        <a th:href="@{/add}">新規登録はこちら</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>名前</th>
+                <th>住所</th>
+                <th>電話番号</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${add}" th:object="${add}">
+                <td class="center" th:text="*{id}"></td>
+                <td th:text="*{name}"></td>
+                <td th:text="*{address}"></td>
+                <td class="center" th:text="*{phone}"></td>
+                
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+
