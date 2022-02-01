@@ -1,0 +1,250 @@
+User.java
+
+
+package com.example.demo.output;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.Data;
+
+/**
+ * ユーザー情報 Entity
+ */
+@Entity
+@Data
+@Table(name = "sampledb")
+public class User implements Serializable {
+
+    /**
+     * ID
+     */
+    @Id
+    @Column(name = "id")
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /**
+     * 名前
+     */
+    @Column(name = "name")
+    private String name;
+
+    /**
+     * 住所
+     */
+    @Column(name = "address")
+    private String address;
+
+    /**
+     * 電話番号
+     */
+    @Column(name = "phone")
+    private String phone;
+
+    /**
+     * 更新日時
+     */
+   
+}
+
+UserController.java
+
+package com.example.demo.output;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import lombok.extern.slf4j.Slf4j;
+
+
+/**
+ * ユーザー情報 Controller
+ */
+@Controller
+@Slf4j
+public class UserController {
+
+    /**
+     * ユーザー情報 Service
+     */
+    @Autowired
+    UserService userService;
+
+    /**
+     * ユーザー情報一覧画面を表示
+     * @param model Model
+     * @return ユーザー情報一覧画面
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String displayList(@ModelAttribute("userRequest")User user, Model model) {
+        
+        return "add";
+    }
+
+    /**
+     * ユーザー新規登録画面を表示
+     * @param model Model
+     * @return ユーザー情報一覧画面
+     */
+    @RequestMapping(value = "/user/add", method = RequestMethod.GET)
+    public String displayAdd(Model model) {
+        model.addAttribute("userRequest", new UserRequest());
+        return "user/add";
+    }
+
+    /**
+     * ユーザー新規登録
+     * @param userRequest リクエストデータ
+     * @param model Model
+     * @return ユーザー情報一覧画面
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public String create(User userRequest, Model model) {
+    	log.info(userRequest.toString());
+        // ユーザー情報の登録
+        userService.create(userRequest);
+        return "list";
+    }
+}
+
+
+
+UserRepository.java
+
+package com.example.demo.output;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/**
+ * ユーザー情報 Repository
+ */
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+}
+
+
+UserRequest.java
+
+package com.example.demo.output;
+
+import java.io.Serializable;
+
+import lombok.Data;
+
+/**
+ * ユーザー情報 リクエストデータ
+ */
+@Data
+public class UserRequest implements Serializable {
+
+    /**
+     * 名前
+     */
+    private String name;
+
+    /**
+     * 住所
+     */
+    private String address;
+
+    /**
+     * 電話番号
+     */
+    private String phone;
+}
+
+
+UserService.java
+
+
+package com.example.demo.output;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * ユーザー情報 Service
+ */
+@Service
+@Transactional(rollbackFor = Exception.class)
+public class UserService {
+
+    /**
+     * ユーザー情報 Repository
+     */
+    @Autowired
+    UserRepository userRepository;
+
+    /**
+     * ユーザー情報 全検索
+     * @return 検索結果
+     */
+    public List<User> searchAll() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * ユーザー情報新規登録
+     * @param user ユーザー情報
+     */
+    public void create(User userRequest) {
+        userRepository.save(userRequest);
+    }
+
+//    /**
+//     * ユーザーTBLエンティティの生成
+//     * @param userRequest ユーザー情報リクエストデータ
+//     * @return ユーザーTBLエンティティ
+//     */
+//    private User CreateUser(UserRequest userRequest) {
+//      
+//
+//        User user = new User();
+//        user.setId((long) 2);
+//        user.setName(userRequest.getName());
+//        user.setAddress(userRequest.getAddress());
+//        user.setPhone(userRequest.getPhone());
+//       
+//
+//        return user;
+//    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
