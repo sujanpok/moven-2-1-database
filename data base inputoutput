@@ -56,6 +56,8 @@ UserController.java
 
 package com.example.demo.output;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -108,14 +110,15 @@ public class UserController {
      * @return ユーザー情報一覧画面
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String create(User userRequest, Model model) {
-    	log.info(userRequest.toString());
+    public String create(@ModelAttribute User userRequest, Model model) {
         // ユーザー情報の登録
-        userService.create(userRequest);
-        return "list";
+       List<User> userList= userService.searchAll();
+       log.info("{}",userList);
+        model.addAttribute("list",userList);
+        return "/list";
     }
+    
 }
-
 
 
 UserRepository.java
@@ -204,23 +207,7 @@ public class UserService {
         userRepository.save(userRequest);
     }
 
-//    /**
-//     * ユーザーTBLエンティティの生成
-//     * @param userRequest ユーザー情報リクエストデータ
-//     * @return ユーザーTBLエンティティ
-//     */
-//    private User CreateUser(UserRequest userRequest) {
-//      
-//
-//        User user = new User();
-//        user.setId((long) 2);
-//        user.setName(userRequest.getName());
-//        user.setAddress(userRequest.getAddress());
-//        user.setPhone(userRequest.getPhone());
-//       
-//
-//        return user;
-//    }
+//  
 }
 
 
